@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diabetes Helper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e8f5e9;
+    }
+
+    header {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    #advice {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f1f8e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 4px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    ul li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Diabetes Helper</h1>
+    <p>ระบบช่วยดูแลผู้ป่วยเบาหวาน</p>
+  </header>
+  <main>
+    <form id="healthForm">
+      <label for="name">ชื่อของคุณ:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="weight">น้ำหนัก (กิโลกรัม):</label>
+      <input type="number" id="weight" name="weight" required>
+      
+      <label for="height">ส่วนสูง (เซนติเมตร):</label>
+      <input type="number" id="height" name="height" required>
+      
+      <label for="sugarLevel">ระดับน้ำตาลในเลือด (mg/dL):</label>
+      <input type="number" id="sugarLevel" name="sugarLevel" required>
+      
+      <label for="foodIntake">อาหารที่รับประทาน:</label>
+      <textarea id="foodIntake" name="foodIntake" rows="4" required></textarea>
+      
+      <label for="exercise">การออกกำลังกาย (นาที):</label>
+      <input type="number" id="exercise" name="exercise" required>
+      
+      <button type="submit">บันทึกข้อมูล</button>
+    </form>
+    <div id="advice"></div>
+  </main>
+  <script>
+    document.getElementById('healthForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const sugarLevel = parseInt(document.getElementById('sugarLevel').value);
+      const foodIntake = document.getElementById('foodIntake').value;
+      const exercise = parseInt(document.getElementById('exercise').value);
+
+      const bmi = (weight / ((height / 100) ** 2)).toFixed(2);
+      let advice = '';
+
+      if (sugarLevel > 180) {
+        advice = `
+          <p><strong>ระดับน้ำตาลในเลือดสูงเกินไป</strong></p>
+          <p>ควรหลีกเลี่ยงอาหารหวาน เช่น น้ำอัดลม ขนมหวาน และอาหารที่มีแป้งสูง</p>
+          <p>แนะนำออกกำลังกายอย่างน้อย 30 นาที เช่น การเดินเร็วหรือโยคะ</p>
+          <ul>
+            <li>อาหารที่แนะนำ: สลัดผัก ไก่ย่าง ข้าวกล้อง</li>
+          </ul>`;
+      } else if (sugarLevel < 70) {
+        advice = `
+          <p><strong>ระดับน้ำตาลในเลือดต่ำ</strong></p>
+          <p>ควรรับประทานอาหารที่มีน้ำตาลเพิ่ม เช่น น้ำผลไม้หวาน กล้วยหอม หรือขนมปัง</p>
+          <p>พักการออกกำลังกายจนกว่าระดับน้ำตาลจะกลับมาอยู่ในระดับปกติ</p>
+          <ul>
+            <li>อาหารที่แนะนำ: น้ำผลไม้ ขนมปังโฮลวีต กล้วย</li>
+          </ul>`;
+      } else {
+        advice = `
+          <p><strong>ระดับน้ำตาลในเลือดปกติ</strong></p>
+          <p>รักษาสุขภาพด้วยการรับประทานอาหารที่สมดุลและออกกำลังกายสม่ำเสมอ</p>
+          <p>แนะนำออกกำลังกายอย่างน้อย 30 นาที เช่น การวิ่งเบา ๆ หรือปั่นจักรยาน</p>
+          <ul>
+            <li>อาหารที่แนะนำ: ข้าวกล้อง อกไก่ ผักนึ่ง</li>
+          </ul>`;
+      }
+
+      document.getElementById('advice').innerHTML = `
+        <p><strong>ข้อมูลของคุณ:</strong></p>
+        <p>ชื่อ: ${name}</p>
+        <p>น้ำหนัก: ${weight} กิโลกรัม</p>
+        <p>ส่วนสูง: ${height} เซนติเมตร</p>
+        <p>BMI: ${bmi}</p>
+        ${advice}
+      `;
+    });
+  </script>
+</body>
+</html>
+<script>
+  document.getElementById('healthForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const sugarLevel = parseInt(document.getElementById('sugarLevel').value);
+    const foodIntake = document.getElementById('foodIntake').value;
+    const exercise = parseInt(document.getElementById('exercise').value);
+
+    const bmi = (weight / ((height / 100) ** 2)).toFixed(2);
+
+    // บันทึกข้อมูลลง Local Storage
+    const userData = { name, weight, height, sugarLevel, foodIntake, exercise, bmi };
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    // ดึงข้อมูลแสดงผล
+    const storedData = JSON.parse(localStorage.getItem('userData'));
+    document.getElementById('advice').innerHTML = `
+      <p><strong>ข้อมูลของคุณ:</strong></p>
+      <p>ชื่อ: ${storedData.name}</p>
+      <p>น้ำหนัก: ${storedData.weight} กิโลกรัม</p>
+      <p>ส่วนสูง: ${storedData.height} เซนติเมตร</p>
+      <p>BMI: ${storedData.bmi}</p>
+      <p>ระดับน้ำตาล: ${storedData.sugarLevel} mg/dL</p>
+    `;
+  });
+</script>
